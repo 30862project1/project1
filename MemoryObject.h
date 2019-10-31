@@ -7,7 +7,18 @@
 
 
 class MemoryObject {
+public:
+    char * data_type;
+    float floatValue;
+    int intValue;
+    char charValue;
+    short shortValue;
 
+    MemoryObject(char * type, int intValue);
+    MemoryObject(char * type, short shortValue);
+    MemoryObject(char * type, char charValue);
+    MemoryObject(char * type, float floatValue);
+    MemoryObject();
 };
 
 
