@@ -8,16 +8,16 @@
 
 class MemoryObject {
 public:
-    char * data_type;
+    const char * data_type;
     float floatValue;
     int intValue;
     char charValue;
     short shortValue;
 
-    MemoryObject(char * type, int intValue);
-    MemoryObject(char * type, short shortValue);
-    MemoryObject(char * type, char charValue);
-    MemoryObject(char * type, float floatValue);
+    MemoryObject(const char * type, int intValue);
+    MemoryObject(const char * type, short shortValue);
+    MemoryObject(const char * type, char charValue);
+    MemoryObject(const char * type, float floatValue);
     MemoryObject();
 };
 
