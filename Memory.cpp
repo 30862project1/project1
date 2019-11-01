@@ -110,7 +110,7 @@ void Memory::parse(){
             }
             case 69:{
                 (RStack->stackPointer)++;
-                object = new MemoryObject("INT", RStack->convertShort(mem, pc + 1));
+                object = new MemoryObject("SHORT", RStack->convertShort(mem, pc + 1));
                 RStack->push(object, RStack->stackPointer);
                 pc += 3;
                 break;
@@ -120,6 +120,45 @@ void Memory::parse(){
                 object = new MemoryObject("INT", RStack->convertInt(mem, pc + 1));
                 RStack->push(object, RStack->stackPointer);
                 pc += 5;
+                break;
+            }
+            case 71:{
+                (RStack->stackPointer)++;
+                object = new MemoryObject("FLOAT", RStack->convertFloat(mem, pc + 1));
+                RStack->push(object, RStack->stackPointer);
+                pc += 5;
+                break;
+            }
+            case 72:{
+                int index = (FStack->stack[FStack->stackPointer])->intValue + 1 + (RStack->stack[RStack->stackPointer])->intValue;
+                char value = RStack->stack[index]->charValue;
+                object = new MemoryObject("CHAR", value);
+                RStack->stack[RStack->stackPointer] = object;
+                pc++;
+                break;
+            }
+            case 73:{
+                int index = (FStack->stack[FStack->stackPointer])->intValue + 1 + (RStack->stack[RStack->stackPointer])->intValue;
+                short value = RStack->stack[index]->shortValue;
+                object = new MemoryObject("SHORT", value);
+                RStack->stack[RStack->stackPointer] = object;
+                pc++;
+                break;
+            }
+            case 74:{
+                int index = (FStack->stack[FStack->stackPointer])->intValue + 1 + (RStack->stack[RStack->stackPointer])->intValue;
+                int value = RStack->stack[index]->intValue;
+                object = new MemoryObject("INT", value);
+                RStack->stack[RStack->stackPointer] = object;
+                pc++;
+                break;
+            }
+            case 75:{
+                int index = (FStack->stack[FStack->stackPointer])->intValue + 1 + (RStack->stack[RStack->stackPointer])->intValue;
+                float value = RStack->stack[index]->floatValue;
+                object = new MemoryObject("FLOAT", value);
+                RStack->stack[RStack->stackPointer] = object;
+                pc++;
                 break;
             }
             default: {

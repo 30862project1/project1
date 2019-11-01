@@ -18,6 +18,7 @@ public:
     void remove(int sp);
     int convertInt(char * mem, int pc);
     short convertShort(char * mem, int pc);
+    float convertFloat(char * mem, int pc);
 };
 
 

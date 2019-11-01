@@ -16,7 +16,7 @@ void RunStack::push(MemoryObject* object, int sp) {
 }
 
 int RunStack::convertInt(char * mem, int pc){
-    return ((mem[pc] & 0xFF) << 0) | ((mem[pc+1] & 0xFF) << 8) | ((mem[pc+2] & 0xFF) << 16) | ((mem[pc+3] & 0xFF) << 24);
+    return int(((mem[pc] & 0xFF) << 0) | ((mem[pc+1] & 0xFF) << 8) | ((mem[pc+2] & 0xFF) << 16) | ((mem[pc+3] & 0xFF) << 24));
 }
 
 short RunStack::convertShort(char * mem, int pc){
@@ -24,5 +24,9 @@ short RunStack::convertShort(char * mem, int pc){
     r = (r << 8) | (mem[pc+1] & 0xFF);
     short s = (short)r;
     return s;
+}
+
+float RunStack::convertFloat(char * mem, int pc){
+    return float(((mem[pc] & 0xFF) << 0) | ((mem[pc+1] & 0xFF) << 8) | ((mem[pc+2] & 0xFF) << 16) | ((mem[pc+3] & 0xFF) << 24));
 }
 
