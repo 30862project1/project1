@@ -363,7 +363,7 @@ void Memory::parse(){
                 first_object = RStack->stack[RStack->stackPointer];
                 RStack->remove(RStack->stackPointer);
                 RStack->stackPointer--;
-                cout << first_object->charValue << endl;
+                cout << int(first_object->charValue) << endl;
                 pc++;
                 break;
             }
