@@ -17,8 +17,11 @@ void Memory::parse(){
     MemoryObject * first_object;
     MemoryObject * second_object;
     MemoryObject * object;
-    while(int(mem[pc]) != 0){
-        switch(int(mem[pc])){
+    int x = 0;
+    while(int(mem[pc] & 0xFF) != 0){
+        cout << "PC value: " << pc << endl;
+        cout << "Op value: " << int(mem[pc] & 0xFF) << endl;
+        switch(int(mem[pc] & 0xFF)){
             case 132:{
                 first_object = (RStack->stack)[RStack->stackPointer];
                 second_object = (RStack->stack)[(RStack->stackPointer) - 1];
@@ -161,13 +164,242 @@ void Memory::parse(){
                 pc++;
                 break;
             }
-            default: {
+            case 76:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                int num_remove = first_object->intValue;
+                for (int i = 0; i < num_remove; i++) {
+                    RStack->remove(RStack->stackPointer);
+                    RStack->stackPointer--;
+                }
                 pc++;
+                break;
+            }
+            case 80:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                int val1 = (FStack->stack[FStack->stackPointer])->intValue;
+                int val2 = first_object->intValue;
+                RStack->stack[val1+val2+1] = second_object;
+                pc++;
+                break;
+            }
+            case 77:{
+                int num_to_keep = RStack->stack[RStack->stackPointer]->intValue;
+                int frameValue = FStack->stack[FStack->stackPointer]->intValue;
+                for (int i = 1; i <= num_to_keep; i++) {
+                    int index = RStack->stackPointer - RStack->stack[RStack->stackPointer]->intValue + i - 1;
+                    int set = (RStack->stack[index])->intValue;
+                    object = new MemoryObject("INT", set);
+                    RStack->stack[frameValue + i] = object;
+                }
+                for (int j = RStack->stackPointer; j > num_to_keep + frameValue; j--) {
+                    RStack->remove(j);
+                    RStack->stackPointer--;
+                }
+                pc++;
+                break;
+            }
+            case 84:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                int get = first_object->intValue + (FStack->stack[FStack->stackPointer])->intValue + 1;
+                int set = second_object->intValue + (FStack->stack[FStack->stackPointer])->intValue + 1;
+                object = new MemoryObject("CHAR", RStack->stack[get]->charValue);
+                RStack->stack[set] = object;
+                pc++;
+                break;
+            }
+            case 85:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                int get = first_object->intValue + (FStack->stack[FStack->stackPointer])->intValue + 1;
+                int set = second_object->intValue + (FStack->stack[FStack->stackPointer])->intValue + 1;
+                object = new MemoryObject("SHORT", RStack->stack[get]->shortValue);
+                RStack->stack[set] = object;
+                pc++;
+                break;
+            }
+            case 86:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                int get = first_object->intValue + (FStack->stack[FStack->stackPointer])->intValue + 1;
+                int set = second_object->intValue + (FStack->stack[FStack->stackPointer])->intValue + 1;
+                object = new MemoryObject("INT", RStack->stack[get]->intValue);
+                RStack->stack[set] = object;
+                pc++;
+                break;
+            }
+            case 87:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                int get = first_object->intValue + (FStack->stack[FStack->stackPointer])->intValue + 1;
+                int set = second_object->intValue + (FStack->stack[FStack->stackPointer])->intValue + 1;
+                object = new MemoryObject("FLOAT", RStack->stack[get]->floatValue);
+                RStack->stack[set] = object;
+                pc++;
+                break;
+            }
+            case 88:{
+                int get = RStack->stack[RStack->stackPointer]->intValue + FStack->stack[FStack->stackPointer]->intValue + 1;
+                int set = RStack->stack[RStack->stackPointer - 1]->intValue + FStack->stack[FStack->stackPointer]->intValue + 1;
+                object = new MemoryObject("CHAR", RStack->stack[set]->charValue);
+                RStack->stack[get] = object;
+                pc++;
+                break;
+            }
+            case 89:{
+                int get = RStack->stack[RStack->stackPointer]->intValue + FStack->stack[FStack->stackPointer]->intValue + 1;
+                int set = RStack->stack[RStack->stackPointer - 1]->intValue + FStack->stack[FStack->stackPointer]->intValue + 1;
+                object = new MemoryObject("SHORT", RStack->stack[set]->shortValue);
+                RStack->stack[get] = object;
+                pc++;
+                break;
+            }
+            case 90:{
+                int get = RStack->stack[RStack->stackPointer]->intValue + FStack->stack[FStack->stackPointer]->intValue + 1;
+                int set = RStack->stack[RStack->stackPointer - 1]->intValue + FStack->stack[FStack->stackPointer]->intValue + 1;
+                object = new MemoryObject("INT", RStack->stack[set]->intValue);
+                RStack->stack[get] = object;
+                pc++;
+                break;
+            }
+            case 91:{
+                int get = RStack->stack[RStack->stackPointer]->intValue + FStack->stack[FStack->stackPointer]->intValue + 1;
+                int set = RStack->stack[RStack->stackPointer - 1]->intValue + FStack->stack[FStack->stackPointer]->intValue + 1;
+                object = new MemoryObject("FLOAT", RStack->stack[set]->floatValue);
+                RStack->stack[get] = object;
+                pc++;
+                break;
+            }
+            case 94:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                RStack->push(first_object, RStack->stackPointer);
+                RStack->stackPointer++;
+                RStack->push(second_object, RStack->stackPointer);
+                RStack->stackPointer++;
+                pc++;
+                break;
+            }
+            case 100:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                object = new MemoryObject("INT", (first_object->intValue + second_object->intValue));
+                RStack->push(object, RStack->stackPointer);
+                RStack->stackPointer++;
+                pc++;
+                break;
+            }
+            case 104:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                object = new MemoryObject("INT", (second_object->intValue - first_object->intValue));
+                RStack->push(object, RStack->stackPointer);
+                RStack->stackPointer++;
+                pc++;
+                break;
+            }
+            case 108:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                object = new MemoryObject("INT", (first_object->intValue * second_object->intValue));
+                RStack->push(object, RStack->stackPointer);
+                RStack->stackPointer++;
+                pc++;
+                break;
+            }
+            case 112:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                second_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                object = new MemoryObject("INT", (second_object->intValue / first_object->intValue));
+                RStack->push(object, RStack->stackPointer);
+                RStack->stackPointer++;
+                pc++;
+                break;
+            }
+            case 144:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                cout << first_object->charValue << endl;
+                pc++;
+                break;
+            }
+            case 145:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                cout << first_object->shortValue << endl;
+                pc++;
+                break;
+            }
+            case 146:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                cout << first_object->intValue << endl;
+                pc++;
+                break;
+            }
+            case 147:{
+                first_object = RStack->stack[RStack->stackPointer];
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                cout << first_object->floatValue << endl;
+                pc++;
+                break;
+            }
+            default: {
+                //none
              }
 
         }
         //printAll(RStack, FStack, mem, pc);
+        x++;
     }
+    cout << "end" << endl;
 }
 
 #include "Memory.h"
