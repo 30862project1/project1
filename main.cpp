@@ -15,23 +15,17 @@ using namespace std;
 
 
 int main(int argc, char * argv[]) {
-    //vector <char> memory;
-    //FILE * fp = fopen("interpreter_input.smp", "r");
-    //std::ifstream fp("interpreter_input.smp");
-    std::ifstream fp("Subroutines.bin");
-
-//get length of file
+    if(argc != 2){
+        cout << "Usage: project1 <filename>" << endl;
+        return 0;
+    }
+    char * file = argv[1];
+    std::ifstream fp(file);
     fp.seekg(0, std::ios::end);
     int length = fp.tellg();
     char memory[length];
     fp.seekg(0, std::ios::beg);
-/*
-    if (length > sizeof (buffer))
-    {
-        length = sizeof (buffer);
-    }*/
     fp.read(memory, length);
-    //fread(buffer, sizeof(char), 8, fp);
     Memory * full_mem = new Memory(memory, 0);
     full_mem->parse();
     return 0;

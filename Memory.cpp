@@ -20,8 +20,6 @@ void Memory::parse(){
     MemoryObject * object;
     int x = 0;
     while(int(mem[pc] & 0xFF) != 0){
-        cout << "PC value: " << pc << endl;
-        cout << "Op value: " << int(mem[pc] & 0xFF) << endl;
         switch(int(mem[pc] & 0xFF)){
             case 132:{
                 first_object = (RStack->stack)[RStack->stackPointer];
@@ -85,8 +83,9 @@ void Memory::parse(){
                 FStack->stackPointer++;
                 first_object = (RStack->stack)[RStack->stackPointer];
                 RStack->remove(RStack->stackPointer);
-                (RStack->stackPointer)--;
+                //(RStack->stackPointer)--;
                 object = new MemoryObject("INT", RStack->stackPointer - first_object->intValue - 1);
+                (RStack->stackPointer)--;
                 FStack->push(object, FStack->stackPointer);
                 second_object = (RStack->stack)[RStack->stackPointer];
                 RStack->remove(RStack->stackPointer);
@@ -103,7 +102,6 @@ void Memory::parse(){
                 RStack->remove(RStack->stackPointer);
                 pc = first_object->intValue;
                 RStack->stackPointer--;
-
                 break;
             }
             case 68:{
@@ -208,16 +206,6 @@ void Memory::parse(){
                     RStack->stackPointer--;
                 }
                 pc++;
-//                int num_to_keep = RStack->stack[RStack->stackPointer]->intValue;
-//                RStack->remove(RStack->stackPointer);
-//                RStack->stackPointer--;
-//                for(int i = 1; i <= num_to_keep; i++) {
-//                    MemoryObject *value = RStack->stack[RStack->stackPointer - num_to_keep + i - 1];
-//                    RStack->push(value, FStack->stack[FStack->stackPointer]->intValue + i);
-//                    RStack->stackPointer++;
-//                }
-//                RStack->stackPointer = FStack->stack[FStack->stackPointer]->intValue + num_to_keep;
-//                pc++;
                 break;
             }
             case 84:{
@@ -470,9 +458,8 @@ void Memory::parse(){
              }
 
         }
-        //printAll(RStack, FStack, mem, pc);
-        x++;
     }
+    cout << endl;
     cout << "Compile values:" << endl;
     cout << "PC: " << pc << endl;
     cout << "sp: " << RStack->stackPointer << endl;
@@ -493,16 +480,10 @@ void Memory::parse(){
     else {
         cout << "fpstack: ";
         for(int i = 0; i < FStack->stackPointer+1; i++) {
-            cout << FStack->stack[i]->intValue;
+            cout << FStack->stack[i]->intValue << " ";
         }
         cout << endl;
     }
-//    PC: 192
-//    sp: -1
-//    rstack: empty
-//    fpsp: -1
-//    fpstack: empty
-    cout << "end" << endl;
 }
 
 #include "Memory.h"
