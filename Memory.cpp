@@ -7,6 +7,7 @@
 #include "FrameStack.h"
 #include "MemoryObject.h"
 #include <iostream>
+#include <string.h>
 using namespace std;
 
 Memory::Memory(char * memory, int passed_pc) : mem(memory), pc(passed_pc) {}
@@ -36,7 +37,7 @@ void Memory::parse(){
             case 136:{
                 first_object = (RStack->stack)[RStack->stackPointer];
                 second_object = (RStack->stack)[(RStack->stackPointer) - 1];
-                int lessthan = ((first_object->intValue) >= (second_object->intValue)) ? 1 : 0;
+                int lessthan = ((first_object->intValue) > (second_object->intValue)) ? 1 : 0;
                 object = new MemoryObject("INT", lessthan);
                 RStack->remove(RStack->stackPointer);
                 RStack->remove((RStack->stackPointer) - 1);
@@ -202,6 +203,7 @@ void Memory::parse(){
                     RStack->remove(j);
                     RStack->stackPointer--;
                 }
+               // RStack->stackPointer = FStack->stack[FStack->stackPointer]->intValue + RStack->stack[RStack->stackPointer]->intValue;
                 pc++;
                 break;
             }
@@ -300,9 +302,9 @@ void Memory::parse(){
                 second_object = RStack->stack[RStack->stackPointer];
                 RStack->remove(RStack->stackPointer);
                 RStack->stackPointer--;
-                RStack->push(first_object, RStack->stackPointer);
+                RStack->push(first_object, RStack->stackPointer + 1);
                 RStack->stackPointer++;
-                RStack->push(second_object, RStack->stackPointer);
+                RStack->push(second_object, RStack->stackPointer + 1);
                 RStack->stackPointer++;
                 pc++;
                 break;
@@ -314,9 +316,25 @@ void Memory::parse(){
                 second_object = RStack->stack[RStack->stackPointer];
                 RStack->remove(RStack->stackPointer);
                 RStack->stackPointer--;
-                object = new MemoryObject("INT", (first_object->intValue + second_object->intValue));
-                RStack->push(object, RStack->stackPointer);
+
+                if(strncmp(first_object->data_type, "INT", 4) == 0){
+                    object = new MemoryObject("INT", (first_object->intValue + second_object->intValue));
+                }
+                else if(strncmp(first_object->data_type, "FLOAT", 6) == 0){
+                    object = new MemoryObject("FLOAT", (first_object->floatValue + second_object->floatValue));
+                }
+                else if(strncmp(first_object->data_type, "SHORT", 6) == 0){
+                    object = new MemoryObject("SHORT", (first_object->shortValue + second_object->shortValue));
+                }
+                else if(strncmp(first_object->data_type, "CHAR", 5) == 0){
+                    int sum = int(first_object->charValue) + int(second_object->charValue);
+                    object = new MemoryObject("CHAR", char(sum));
+                }
+
+
+                RStack->push(object, RStack->stackPointer + 1);
                 RStack->stackPointer++;
+
                 pc++;
                 break;
             }
@@ -327,8 +345,22 @@ void Memory::parse(){
                 second_object = RStack->stack[RStack->stackPointer];
                 RStack->remove(RStack->stackPointer);
                 RStack->stackPointer--;
-                object = new MemoryObject("INT", (second_object->intValue - first_object->intValue));
-                RStack->push(object, RStack->stackPointer);
+
+                if(strncmp(first_object->data_type, "INT", 4) == 0){
+                    object = new MemoryObject("INT", (second_object->intValue - first_object->intValue));
+                }
+                else if(strncmp(first_object->data_type, "FLOAT", 6) == 0){
+                    object = new MemoryObject("FLOAT", (second_object->floatValue - first_object->floatValue));
+                }
+                else if(strncmp(first_object->data_type, "SHORT", 6) == 0){
+                    object = new MemoryObject("SHORT", (second_object->shortValue - first_object->shortValue));
+                }
+                else if(strncmp(first_object->data_type, "CHAR", 5) == 0){
+                    int diff = int(second_object->charValue) - int(first_object->charValue);
+                    object = new MemoryObject("CHAR", char(diff));
+                }
+
+                RStack->push(object, RStack->stackPointer + 1);
                 RStack->stackPointer++;
                 pc++;
                 break;
@@ -340,8 +372,22 @@ void Memory::parse(){
                 second_object = RStack->stack[RStack->stackPointer];
                 RStack->remove(RStack->stackPointer);
                 RStack->stackPointer--;
-                object = new MemoryObject("INT", (first_object->intValue * second_object->intValue));
-                RStack->push(object, RStack->stackPointer);
+
+                if(strncmp(first_object->data_type, "INT", 4) == 0){
+                    object = new MemoryObject("INT", (first_object->intValue * second_object->intValue));
+                }
+                else if(strncmp(first_object->data_type, "FLOAT", 6) == 0){
+                    object = new MemoryObject("FLOAT", (first_object->floatValue * second_object->floatValue));
+                }
+                else if(strncmp(first_object->data_type, "SHORT", 6) == 0){
+                    object = new MemoryObject("SHORT", (first_object->shortValue * second_object->shortValue));
+                }
+                else if(strncmp(first_object->data_type, "CHAR", 5) == 0){
+                    int product = int(first_object->charValue) * int(second_object->charValue);
+                    object = new MemoryObject("CHAR", char(product));
+                }
+
+                RStack->push(object, RStack->stackPointer + 1);
                 RStack->stackPointer++;
                 pc++;
                 break;
@@ -353,8 +399,23 @@ void Memory::parse(){
                 second_object = RStack->stack[RStack->stackPointer];
                 RStack->remove(RStack->stackPointer);
                 RStack->stackPointer--;
-                object = new MemoryObject("INT", (second_object->intValue / first_object->intValue));
-                RStack->push(object, RStack->stackPointer);
+                //object = new MemoryObject("INT", (second_object->intValue / first_object->intValue));
+
+                if(strncmp(first_object->data_type, "INT", 4) == 0){
+                    object = new MemoryObject("INT", (second_object->intValue / first_object->intValue));
+                }
+                else if(strncmp(first_object->data_type, "FLOAT", 6) == 0){
+                    object = new MemoryObject("FLOAT", (second_object->floatValue / first_object->floatValue));
+                }
+                else if(strncmp(first_object->data_type, "SHORT", 6) == 0){
+                    object = new MemoryObject("SHORT", (second_object->shortValue / first_object->shortValue));
+                }
+                else if(strncmp(first_object->data_type, "CHAR", 5) == 0){
+                    int diff = int(second_object->charValue) / int(first_object->charValue);
+                    object = new MemoryObject("CHAR", char(diff));
+                }
+
+                RStack->push(object, RStack->stackPointer + 1);
                 RStack->stackPointer++;
                 pc++;
                 break;
