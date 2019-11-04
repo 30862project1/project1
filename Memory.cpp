@@ -479,11 +479,22 @@ void Memory::parse(){
         cout << "rstack: empty" << endl;
     }
     else {
-
+        cout << "rstack: ";
+        for(int i = 0; i < RStack->stackPointer+1; i++) {
+            cout << RStack->stack[i]->intValue;
+        }
+        cout << endl;
     }
     cout << "fpsp: " << FStack->stackPointer << endl;
     if(FStack->stackPointer == -1) {
         cout << "fpstack: empty" << endl;
+    }
+    else {
+        cout << "fpstack: ";
+        for(int i = 0; i < FStack->stackPointer+1; i++) {
+            cout << FStack->stack[i]->intValue;
+        }
+        cout << endl;
     }
 //    PC: 192
 //    sp: -1
