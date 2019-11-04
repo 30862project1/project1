@@ -18,7 +18,7 @@ int main(int argc, char * argv[]) {
     //vector <char> memory;
     //FILE * fp = fopen("interpreter_input.smp", "r");
     //std::ifstream fp("interpreter_input.smp");
-    std::ifstream fp("Math.bin");
+    std::ifstream fp("Subroutines.bin");
 
 //get length of file
     fp.seekg(0, std::ios::end);
