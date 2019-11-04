@@ -191,19 +191,31 @@ void Memory::parse(){
                 break;
             }
             case 77:{
+//                int num_to_keep = RStack->stack[RStack->stackPointer]->intValue;
+//                RStack->remove(RStack->stackPointer);
+//                RStack->stackPointer--;
+//                int frameValue = FStack->stack[FStack->stackPointer]->intValue;
+//                cout << "num to keep: " << num_to_keep << endl;
+//                for (int i = 1; i <= num_to_keep; i++) {
+//                    int index = RStack->stackPointer - RStack->stack[RStack->stackPointer]->intValue + i - 1;
+//                    int set = (RStack->stack[index])->intValue;
+//                    object = new MemoryObject("INT", set);
+//                    RStack->stack[frameValue + i] = object;
+//                }
+//                for (int j = RStack->stackPointer; j > num_to_keep + frameValue; j--) {
+//                    RStack->remove(j);
+//                    RStack->stackPointer--;
+//                }
+//                pc++;
                 int num_to_keep = RStack->stack[RStack->stackPointer]->intValue;
-                int frameValue = FStack->stack[FStack->stackPointer]->intValue;
-                for (int i = 1; i <= num_to_keep; i++) {
-                    int index = RStack->stackPointer - RStack->stack[RStack->stackPointer]->intValue + i - 1;
-                    int set = (RStack->stack[index])->intValue;
-                    object = new MemoryObject("INT", set);
-                    RStack->stack[frameValue + i] = object;
+                RStack->remove(RStack->stackPointer);
+                RStack->stackPointer--;
+                for(int i = 1; i <= num_to_keep; i++) {
+                    MemoryObject *value = RStack->stack[RStack->stackPointer - num_to_keep + i - 1];
+                    RStack->push(value, FStack->stack[FStack->stackPointer]->intValue + i);
+                    RStack->stackPointer++;
                 }
-                for (int j = RStack->stackPointer; j > num_to_keep + frameValue; j--) {
-                    RStack->remove(j);
-                    RStack->stackPointer--;
-                }
-               // RStack->stackPointer = FStack->stack[FStack->stackPointer]->intValue + RStack->stack[RStack->stackPointer]->intValue;
+                RStack->stackPointer = FStack->stack[FStack->stackPointer]->intValue + num_to_keep;
                 pc++;
                 break;
             }
@@ -460,6 +472,24 @@ void Memory::parse(){
         //printAll(RStack, FStack, mem, pc);
         x++;
     }
+    cout << "Compile values:" << endl;
+    cout << "PC: " << pc << endl;
+    cout << "sp: " << RStack->stackPointer << endl;
+    if(RStack->stackPointer == -1) {
+        cout << "rstack: empty" << endl;
+    }
+    else {
+
+    }
+    cout << "fpsp: " << FStack->stackPointer << endl;
+    if(FStack->stackPointer == -1) {
+        cout << "fpstack: empty" << endl;
+    }
+//    PC: 192
+//    sp: -1
+//    rstack: empty
+//    fpsp: -1
+//    fpstack: empty
     cout << "end" << endl;
 }
 
